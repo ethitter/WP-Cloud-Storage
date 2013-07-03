@@ -28,6 +28,8 @@ class WP_Cloud_Storage_Base {
 	 */
 	private static $__instance = null;
 
+	private $rewrite_base = 'f';
+
 	/**
 	 * Class variables
 	 */
@@ -75,6 +77,8 @@ class WP_Cloud_Storage_Base {
 	 * @return null
 	 */
 	private function setup() {
+		add_action( 'generate_rewrite_rules', array( $this, 'action_generate_rewrite_rules' ), 99 );
+
 		add_action( 'pre_get_posts', array( $this, 'action_pre_get_posts' ) );
 
 		add_filter( 'upload_mimes', array( $this, 'filter_upload_mimes' ) );
@@ -89,6 +93,25 @@ class WP_Cloud_Storage_Base {
 
 		// Misc
 		add_action( 'init', array( $this, 'disable_wp_core_features' ) );
+	}
+
+	/**
+	 * Register rewrite rules for short URLs in the form of "f/123" for attachments
+	 *
+	 * @param object $rewrite
+	 * @action generate_rewrite_rules
+	 * @return null
+	 */
+	public function action_generate_rewrite_rules( $rewrite ) {
+		$short_rules = array(
+			$this->rewrite_base . '/([\d]+)/?$' => $rewrite->index . '?p=$matches[1]',
+			$this->rewrite_base . '/([\d]+)/trackback/?$' => $rewrite->index . '?p=$matches[1]&tb=1',
+			$this->rewrite_base . '/([\d]+)/feed/(feed|rdf|rss|rss2|atom)/?$' => $rewrite->index . '?p=$matches[1]&feed=$matches[2]',
+			$this->rewrite_base . '/([\d]+)/(feed|rdf|rss|rss2|atom)/?$' => $rewrite->index . '?p=$matches[1]&feed=$matches[2]',
+			$this->rewrite_base . '/([\d]+)/comment-page-([0-9]{1,})/?$' => $rewrite->index . '?p=$matches[1]&cpage=$matches[2]',
+		);
+
+		$rewrite->rules = array_merge( $short_rules, $rewrite->rules );
 	}
 
 	/**
