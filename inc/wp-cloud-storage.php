@@ -77,9 +77,10 @@ class WP_Cloud_Storage_Base {
 	 * @return null
 	 */
 	private function setup() {
-		add_action( 'generate_rewrite_rules', array( $this, 'action_generate_rewrite_rules' ), 99 );
-
 		add_action( 'pre_get_posts', array( $this, 'action_pre_get_posts' ) );
+
+		add_action( 'generate_rewrite_rules', array( $this, 'action_generate_rewrite_rules' ), 99 );
+		add_action( 'attachment_link', array( $this, 'filter_attachment_link' ), 10, 2 );
 
 		add_filter( 'upload_mimes', array( $this, 'filter_upload_mimes' ) );
 
@@ -93,6 +94,16 @@ class WP_Cloud_Storage_Base {
 
 		// Misc
 		add_action( 'init', array( $this, 'disable_wp_core_features' ) );
+	}
+
+	/**
+	 *
+	 */
+	public function action_pre_get_posts( $query ) {
+		if ( ! is_admin() && $query->is_main_query() ) {
+			$query->set( 'post_type', 'attachment' );
+			$query->set( 'post_status', 'inherit' );
+		}
 	}
 
 	/**
@@ -115,13 +126,21 @@ class WP_Cloud_Storage_Base {
 	}
 
 	/**
+	 * Rewrite attachment links to be in the form of "f/123"
 	 *
+	 * @param string $link
+	 * @param int $post_id
+	 * @uses home_url
+	 * @uses user_trailingslashit
+	 * @filter attachment_link
+	 * @return string
 	 */
-	public function action_pre_get_posts( $query ) {
-		if ( ! is_admin() && $query->is_main_query() ) {
-			$query->set( 'post_type', 'attachment' );
-			$query->set( 'post_status', 'inherit' );
-		}
+	public function filter_attachment_link( $link, $post_id ) {
+		$link = home_url( $this->rewrite_base . '/' . $post_id );
+
+		$link = user_trailingslashit( $link );
+
+		return $link;
 	}
 
 	/**
