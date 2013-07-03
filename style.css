@@ -309,7 +309,12 @@ textarea {
 
 /* Layout */
 body {
+	background-color: #000;
+}
+
+#page {
 	background: url('assets/tweed.png') repeat scroll;
+	margin: 0 auto;
 }
 
 @media only screen and (-moz-min-device-pixel-ratio: 2),
@@ -317,14 +322,9 @@ only screen and (-o-min-device-pixel-ratio: 2),
 only screen and (-webkit-min-device-pixel-ratio: 2),
 only screen and (min-device-pixel-ratio: 2),
 only screen and (min-resolution: 144dpi) {
-    body {
+    #page {
          background-image:url('assets/tweed_@2X.png');
      }
-}
-
-#page {
-	margin: 0 auto;
-	position: relative;
 }
 
 #masthead, #colophon {
@@ -336,9 +336,6 @@ only screen and (min-resolution: 144dpi) {
 	margin-bottom: 15px;
 }
 #colophon {
-	position: absolute;
-	bottom: 0;
-	left: 0;
 	padding: 8px 15px;
 	font-size: 10px;
 	color: #aaa;
