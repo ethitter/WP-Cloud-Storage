@@ -14,14 +14,9 @@ if ( ! function_exists( 'wp_cloud_storage_content_nav' ) ) :
 function wp_cloud_storage_content_nav( $nav_id ) {
 	global $wp_query, $post;
 
-	// Don't print empty markup on single pages if there's nowhere to navigate.
-	if ( is_single() ) {
-		$previous = ( is_attachment() ) ? get_post( $post->post_parent ) : get_adjacent_post( false, '', true );
-		$next = get_adjacent_post( false, '', false );
-
-		if ( ! $next && ! $previous )
-			return;
-	}
+	// Don't print anything on singular pages
+	if ( is_singular() )
+		return;
 
 	// Don't print empty markup in archives if there's only one page.
 	if ( $wp_query->max_num_pages < 2 && ( is_home() || is_archive() || is_search() ) )
