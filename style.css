@@ -323,13 +323,19 @@ only screen and (min-resolution: 144dpi) {
 }
 
 #page {
-	margin: 0 auto 30px;
-	padding-bottom: 15px;
+	margin: 0 auto;
 }
 
-#masthead {
+#masthead, #colophon {
 	padding: 15px;
 	background-color: #000;
+	width: 100%;
+}
+#colophon {
+	padding: 8px 15px;
+	font-size: 10px;
+	color: #aaa;
+	text-align: center;
 }
 	#masthead .site-branding {}
 		#masthead .site-branding .site-title, #masthead .site-branding .site-title a {
@@ -528,13 +534,19 @@ a:hover {
 .group-blog .byline {
 	display: inline;
 }
-.entry-header, .entry-title, .entry-meta {
+.entry-header, .entry-title, .entry-footer {
 	text-align: center;
+}
+.entry-title {
+	font-size: 20px;
 }
 .entry-content,
 .entry-summary {
-	margin: 1.5em auto 0;
+	margin: 0 auto;
 	text-align: center;
+}
+.entry-footer {
+	font-size: 12px;
 }
 .page-links {
 	clear: both;
