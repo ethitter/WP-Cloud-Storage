@@ -99,6 +99,7 @@ class WP_Cloud_Storage_Base {
 
 		// Misc
 		add_action( 'init', array( $this, 'disable_wp_core_features' ) );
+		add_action( 'admin_menu', array( $this, 'action_admin_menu' ) );
 	}
 
 	/**
@@ -265,6 +266,19 @@ class WP_Cloud_Storage_Base {
 		remove_action( 'wp_head', 'rsd_link' );
 		remove_action( 'wp_head', 'wlwmanifest_link' );
 		remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0 );
+	}
+
+	/**
+	 *
+	 */
+	public function action_admin_menu() {
+		// Remove Posts menu item
+		global $menu, $submenu;
+		unset( $menu[5] );
+		unset( $submenu['edit.php']);
+
+		// Hide Right Now metabox since it's generally useless for us
+		remove_meta_box( 'dashboard_right_now', 'dashboard', 'core' );
 	}
 }
 WP_Cloud_Storage_Base::get_instance();
