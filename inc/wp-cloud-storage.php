@@ -78,14 +78,24 @@ class WP_Cloud_Storage_Base {
 		add_action( 'pre_get_posts', array( $this, 'action_pre_get_posts' ) );
 
 		add_filter( 'upload_mimes', array( $this, 'filter_upload_mimes' ) );
+
+		// Commenting
+		add_filter( 'pre_option_default_comment_status', array( $this, 'comment_ping_status' ) );
+		add_filter( 'pre_option_default_ping_status', array( $this, 'comment_ping_status' ) );
+		add_filter( 'pre_option_comment_moderation', array( $this, 'comment_moderation' ) );
+		add_filter( 'pre_option_comment_whitelist', '__return_null' );
+		add_filter( 'wp_insert_post_data', array( $this, 'comment_status_override' ), 10 );
+		add_action( 'wp_loaded', array( $this, 'disable_comments' ) );
 	}
 
 	/**
 	 *
 	 */
 	public function action_pre_get_posts( $query ) {
-		// if ( $query->is_main_query() )
-		//	$query->set( 'post_type', 'attachment' );
+		if ( $query->is_main_query() ) {
+			$query->set( 'post_type', 'attachment' );
+			$query->set( 'post_status', 'inherit' );
+		}
 	}
 
 	/**
@@ -97,6 +107,60 @@ class WP_Cloud_Storage_Base {
 		$types['patch|diff'] = 'text/html';
 
 		return $types;
+	}
+
+	/**
+	 * Ensure no comments or pings are accepted on new posts
+	 *
+	 * @param string $status
+	 * @filter pre_option_default_comment_status
+	 * @filter pre_option_default_ping_status
+	 * @return string
+	 */
+	public function comment_ping_status( $status ) {
+		return 'closed';
+	}
+
+	/**
+	 * Enforce administrator comment moderation
+	 *
+	 * @param string $moderation
+	 * @filter pre_option_comment_moderation
+	 * @return int
+	 */
+	public function comment_moderation( $moderation ) {
+		return 1;
+	}
+
+	/**
+	 * Ensure that all new and updated posts are closed to pings and comments
+	 *
+	 * @param array $data
+	 * @filter wp_insert_post_data
+	 * @return array
+	 */
+	public function comment_status_override( $data ) {
+		$data['comment_status'] = $data['ping_status'] = 'closed';
+
+		return $data;
+	}
+
+	/**
+	 * Strip comments support from all post types that have it
+	 *
+	 * @uses get_post_types
+	 * @uses post_type_supports
+	 * @uses remove_post_type_support
+	 * @action wp_loaded
+	 * @return null
+	 */
+	public function disable_comments() {
+		$post_types = get_post_types();
+
+		foreach ( $post_types as $post_type ) {
+			if ( post_type_supports( $post_type, 'comments' ) )
+				remove_post_type_support( $post_type, 'comments' );
+		}
 	}
 }
 WP_Cloud_Storage_Base::get_instance();
