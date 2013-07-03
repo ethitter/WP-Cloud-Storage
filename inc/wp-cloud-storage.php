@@ -29,6 +29,8 @@ class WP_Cloud_Storage_Base {
 	private static $__instance = null;
 
 	private $rewrite_base = 'f';
+	private $download_base = 'dl';
+	private $qv = 'wpcs-action';
 
 	/**
 	 * Class variables
@@ -77,8 +79,11 @@ class WP_Cloud_Storage_Base {
 	 * @return null
 	 */
 	private function setup() {
+		add_action( 'parse_request', array( $this, 'action_parse_request' ) );
+
 		add_action( 'pre_get_posts', array( $this, 'action_pre_get_posts' ) );
 
+		add_filter( 'query_vars', array( $this, 'filter_query_vars' ) );
 		add_action( 'generate_rewrite_rules', array( $this, 'action_generate_rewrite_rules' ), 99 );
 		add_action( 'attachment_link', array( $this, 'filter_attachment_link' ), 10, 2 );
 
@@ -99,6 +104,36 @@ class WP_Cloud_Storage_Base {
 	/**
 	 *
 	 */
+	public function action_parse_request( $request ) {
+		if ( array_key_exists( $this->qv, $request->query_vars ) && $this->download_base == $request->query_vars[ $this->qv ] ) {
+			$id = array_key_exists( 'p', $request->query_vars ) ? (int) $request->query_vars['p'] : false;
+
+			if ( ! $id )
+				wp_die( 'The requested item could not be located.' );
+
+			$attached_item = wp_get_attachment_url( $id );
+
+			if ( ! $attached_item )
+				wp_die( 'The requested item could not be located.' );
+
+			$mime_type = get_post_mime_type( $id );
+
+			$filename = pathinfo( $attached_item, PATHINFO_BASENAME );
+
+			header( 'Content-Description: File Transfer' );
+			header( 'Content-Type: ' . $mime_type );
+			header( 'Content-Transfer-Encoding: binary' );
+			// header( 'Content-Length: ' . filesize( $attached_item ) );
+			header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+			header( 'Location: ' . $attached_item );
+			// readfile( $attached_item );
+			exit;
+		}
+	}
+
+	/**
+	 *
+	 */
 	public function action_pre_get_posts( $query ) {
 		if ( ! is_admin() && $query->is_main_query() ) {
 			$query->set( 'post_type', 'attachment' );
@@ -107,7 +142,16 @@ class WP_Cloud_Storage_Base {
 	}
 
 	/**
-	 * Register rewrite rules for short URLs in the form of "f/123" for attachments
+	 * Add a new query var specific to this plugin
+	 */
+	public function filter_query_vars( $vars) {
+		$vars[] = $this->qv;
+
+		return $vars;
+	}
+
+	/**
+	 * Register rewrite rules for short URLs in the form of "f/123" and "dl/123" for attachments
 	 *
 	 * @param object $rewrite
 	 * @action generate_rewrite_rules
@@ -115,11 +159,11 @@ class WP_Cloud_Storage_Base {
 	 */
 	public function action_generate_rewrite_rules( $rewrite ) {
 		$short_rules = array(
-			$this->rewrite_base . '/([\d]+)/?$' => $rewrite->index . '?p=$matches[1]',
-			$this->rewrite_base . '/([\d]+)/trackback/?$' => $rewrite->index . '?p=$matches[1]&tb=1',
-			$this->rewrite_base . '/([\d]+)/feed/(feed|rdf|rss|rss2|atom)/?$' => $rewrite->index . '?p=$matches[1]&feed=$matches[2]',
-			$this->rewrite_base . '/([\d]+)/(feed|rdf|rss|rss2|atom)/?$' => $rewrite->index . '?p=$matches[1]&feed=$matches[2]',
-			$this->rewrite_base . '/([\d]+)/comment-page-([0-9]{1,})/?$' => $rewrite->index . '?p=$matches[1]&cpage=$matches[2]',
+			'(' . $this->rewrite_base . '|' . $this->download_base . ')' . '/([\d]+)/?$' => $rewrite->index . '?p=$matches[2]&' . $this->qv . '=$matches[1]',
+			'(' . $this->rewrite_base . '|' . $this->download_base . ')' . '/([\d]+)/trackback/?$' => $rewrite->index . '?p=$matches[2]&tb=1&' . $this->qv . '=$matches[1]',
+			'(' . $this->rewrite_base . '|' . $this->download_base . ')' . '/([\d]+)/feed/(feed|rdf|rss|rss2|atom)/?$' => $rewrite->index . '?p=$matches[2]&feed=$matches[3]&' . $this->qv . '=$matches[1]',
+			'(' . $this->rewrite_base . '|' . $this->download_base . ')'. '/([\d]+)/(feed|rdf|rss|rss2|atom)/?$' => $rewrite->index . '?p=$matches[2]&feed=$matches[3]&' . $this->qv . '=$matches[1]',
+			'(' . $this->rewrite_base . '|' . $this->download_base . ')' . '/([\d]+)/comment-page-([0-9]{1,})/?$' => $rewrite->index . '?p=$matches[2]&cpage=$matches[3]&' . $this->qv . '=$matches[1]',
 		);
 
 		$rewrite->rules = array_merge( $short_rules, $rewrite->rules );
