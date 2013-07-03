@@ -6,7 +6,13 @@
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<header class="entry-header">
-		<h1 class="entry-title"><a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title_attribute(); ?>"><?php the_title(); ?></a></h1>
+		<h1 class="entry-title">
+		<?php if ( is_singular() ) : ?>
+			<?php the_title(); ?>
+		<?php else : ?>
+			<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title_attribute(); ?>"><?php the_title(); ?></a>
+		<?php endif; ?>
+		</h1>
 
 		<div class="entry-meta">
 			<?php wp_cloud_storage_posted_on(); ?>
