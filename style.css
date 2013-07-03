@@ -548,6 +548,9 @@ a:hover {
 	margin: 0 auto;
 	text-align: center;
 }
+.entry-content {
+	padding: 10px 0;
+}
 .entry-footer {
 	font-size: 12px;
 }
