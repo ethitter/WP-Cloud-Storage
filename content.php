@@ -13,10 +13,6 @@
 			<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title_attribute(); ?>"><?php the_title(); ?></a>
 		<?php endif; ?>
 		</h1>
-
-		<div class="entry-meta">
-			<?php wp_cloud_storage_posted_on(); ?>
-		</div><!-- .entry-meta -->
 	</header><!-- .entry-header -->
 
 	<?php if ( is_search() ) : // Only display Excerpts for Search ?>
@@ -28,4 +24,11 @@
 		<?php echo wp_get_attachment_link( get_the_ID(), ( is_singular() ? 'full' : 'thumbnail' ), ! is_singular(), true ); ?>
 	</div><!-- .entry-content -->
 	<?php endif; ?>
+
+	<footer class="entry-footer">
+		<div class="entry-meta">
+			<?php wp_cloud_storage_posted_on(); ?>
+		</div><!-- .entry-meta -->
+	</footer>
+
 </article><!-- #post-<?php the_ID(); ?> -->
