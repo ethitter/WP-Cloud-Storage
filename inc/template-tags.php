@@ -60,59 +60,20 @@ if ( ! function_exists( 'wp_cloud_storage_posted_on' ) ) :
  * Prints HTML with meta information for the current post-date/time and author.
  */
 function wp_cloud_storage_posted_on() {
-	$time_string = '<time class="entry-date published" datetime="%1$s">%2$s</time>';
+	$time_string = '<time class="entry-date published" datetime="%1$s">%2$s at %3$s</time>';
 	if ( get_the_time( 'U' ) !== get_the_modified_time( 'U' ) )
-		$time_string .= '<time class="updated" datetime="%3$s">%4$s</time>';
+		$time_string .= '<time class="updated" datetime="%4$s">%5$s</time>';
 
 	$time_string = sprintf( $time_string,
-		esc_attr( get_the_date( 'c' ) ),
-		esc_html( get_the_date() ),
+		esc_attr( get_the_time( 'c' ) ),
+		esc_html( get_the_time( get_option( 'date_format' ) ) ),
+		esc_html( get_the_time( get_option( 'time_format' ) ) ),
 		esc_attr( get_the_modified_date( 'c' ) ),
 		esc_html( get_the_modified_date() )
 	);
 
-	printf( __( 'Posted on <a href="%1$s" title="%2$s" rel="bookmark">%3$s</a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="%4$s" title="%5$s" rel="author">%6$s</a></span></span>', 'wp_cloud_storage' ),
-		esc_url( get_permalink() ),
-		esc_attr( get_the_time() ),
-		$time_string,
-		esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
-		esc_attr( sprintf( __( 'View all posts by %s', 'wp_cloud_storage' ), get_the_author() ) ),
-		get_the_author()
+	printf( __( 'Uploaded on %1$s', 'wp_cloud_storage' ),
+		$time_string
 	);
 }
 endif;
-
-/**
- * Returns true if a blog has more than 1 category
- */
-function wp_cloud_storage_categorized_blog() {
-	if ( false === ( $all_the_cool_cats = get_transient( 'all_the_cool_cats' ) ) ) {
-		// Create an array of all the categories that are attached to posts
-		$all_the_cool_cats = get_categories( array(
-			'hide_empty' => 1,
-		) );
-
-		// Count the number of categories that are attached to the posts
-		$all_the_cool_cats = count( $all_the_cool_cats );
-
-		set_transient( 'all_the_cool_cats', $all_the_cool_cats );
-	}
-
-	if ( '1' != $all_the_cool_cats ) {
-		// This blog has more than 1 category so wp_cloud_storage_categorized_blog should return true
-		return true;
-	} else {
-		// This blog has only 1 category so wp_cloud_storage_categorized_blog should return false
-		return false;
-	}
-}
-
-/**
- * Flush out the transients used in wp_cloud_storage_categorized_blog
- */
-function wp_cloud_storage_category_transient_flusher() {
-	// Like, beat it. Dig?
-	delete_transient( 'all_the_cool_cats' );
-}
-add_action( 'edit_category', 'wp_cloud_storage_category_transient_flusher' );
-add_action( 'save_post',     'wp_cloud_storage_category_transient_flusher' );
