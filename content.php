@@ -19,7 +19,7 @@
 	</div><!-- .entry-summary -->
 	<?php else : ?>
 	<div class="entry-content">
-		<?php the_attachment_link( get_the_ID(), true, null, ! is_singular() ); ?>
+		<?php echo wp_get_attachment_link( get_the_ID(), ( is_singular() ? 'full' : 'thumbnail' ), ! is_singular(), true ); ?>
 	</div><!-- .entry-content -->
 	<?php endif; ?>
 </article><!-- #post-<?php the_ID(); ?> -->
