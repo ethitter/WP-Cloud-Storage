@@ -31,7 +31,7 @@
 			<h1 class="menu-toggle"><?php _e( 'Menu', 'wp_cloud_storage' ); ?></h1>
 			<div class="screen-reader-text skip-link"><a href="#content" title="<?php esc_attr_e( 'Skip to content', 'wp_cloud_storage' ); ?>"><?php _e( 'Skip to content', 'wp_cloud_storage' ); ?></a></div>
 
-			<?php wp_nav_menu( array( 'theme_location' => 'primary' ) ); ?>
+			<?php wp_nav_menu( array( 'theme_location' => 'primary', 'fallback_cb' => false ) ); ?>
 		</nav><!-- #site-navigation -->
 	</header><!-- #masthead -->
 
