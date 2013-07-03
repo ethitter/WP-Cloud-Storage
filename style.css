@@ -307,6 +307,14 @@ textarea {
 	width: 98%;
 }
 
+/* Layout */
+#page {
+	max-width: 650px;
+	margin: 30px auto;
+	border: 1px solid;
+	padding: 15px;
+}
+
 /* Links */
 a {
 	color: royalblue;
