@@ -22,6 +22,19 @@
 	<?php else : ?>
 	<div class="entry-content">
 		<?php echo wp_get_attachment_link( get_the_ID(), ( is_singular() ? 'full' : 'thumbnail' ), ! is_singular(), true ); ?>
+
+		<?php if ( has_excerpt() ) : ?>
+			<p class="excerpt"><?php the_excerpt(); ?></p>
+		<?php endif; ?>
+
+		<?php
+			$removed = remove_filter( 'the_content', 'prepend_attachment' );
+
+			the_content();
+
+			if ( $removed )
+				add_filter( 'the_content', 'prepend_attachment' );
+		?>
 	</div><!-- .entry-content -->
 	<?php endif; ?>
 
