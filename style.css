@@ -308,24 +308,68 @@ textarea {
 }
 
 /* Layout */
+body {
+	background: url('assets/tweed.png') repeat scroll;
+}
+
+@media only screen and (-moz-min-device-pixel-ratio: 2),
+only screen and (-o-min-device-pixel-ratio: 2),
+only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (min-device-pixel-ratio: 2),
+only screen and (min-resolution: 144dpi) {
+    body {
+         background-image:url('assets/tweed_@2X.png');
+     }
+}
+
 #page {
-	max-width: 650px;
-	margin: 30px auto;
-	border: 1px solid;
+	margin: 0 auto 30px;
+	padding-bottom: 15px;
+}
+
+#masthead {
 	padding: 15px;
+	background-color: #000;
+}
+	#masthead .site-branding {}
+		#masthead .site-branding .site-title, #masthead .site-branding .site-title a {
+			color: #fff;
+			font-weight: bold;
+			font-size: 24px;
+			display: inline-block;
+		}
+			#masthead .site-branding .site-title a {
+				text-decoration: none;
+			}
+			#masthead .site-branding .site-title a:hover {
+				color: #ccc;
+			}
+
+		#masthead .site-branding .site-description {
+			color: #ddd;
+			margin-left: 15px;
+			display: inline-block;
+		}
+
+#main {
+	max-width: 650px;
+	margin: 0 auto;
+	/*background: url('assets/witewall_3.png') repeat scroll;*/
 }
 
 /* Links */
 a {
-	color: royalblue;
+	color: #ccc;
+	text-decoration: none;
 }
-a:visited {
-	color: purple;
-}
+a:visited,
 a:hover,
 a:focus,
 a:active {
-	color: midnightblue;
+	color: #ccc;
+}
+a:hover {
+	color: #aaa;
 }
 
 /* Alignment */
@@ -468,7 +512,14 @@ a:active {
 }
 .hentry {
 	margin: 0 0 1.5em;
+	color: #ccc;
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 1em;
 }
+	.single .hentry {
+		border-bottom: none;
+		padding-bottom: 0;
+	}
 .byline,
 .updated {
 	display: none;
@@ -477,9 +528,13 @@ a:active {
 .group-blog .byline {
 	display: inline;
 }
+.entry-header, .entry-title, .entry-meta {
+	text-align: center;
+}
 .entry-content,
 .entry-summary {
-	margin: 1.5em 0 0;
+	margin: 1.5em auto 0;
+	text-align: center;
 }
 .page-links {
 	clear: both;
