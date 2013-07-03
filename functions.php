@@ -47,19 +47,6 @@ function wp_cloud_storage_setup() {
 	register_nav_menus( array(
 		'primary' => __( 'Primary Menu', 'wp_cloud_storage' ),
 	) );
-
-	/**
-	 * Enable support for Post Formats
-	 */
-	add_theme_support( 'post-formats', array( 'aside', 'image', 'video', 'quote', 'link' ) );
-
-	/**
-	 * Setup the WordPress core custom background feature.
-	 */
-	add_theme_support( 'custom-background', apply_filters( 'wp_cloud_storage_custom_background_args', array(
-		'default-color' => 'ffffff',
-		'default-image' => '',
-	) ) );
 }
 endif; // wp_cloud_storage_setup
 add_action( 'after_setup_theme', 'wp_cloud_storage_setup' );
@@ -100,11 +87,6 @@ function wp_cloud_storage_scripts() {
 add_action( 'wp_enqueue_scripts', 'wp_cloud_storage_scripts' );
 
 /**
- * Implement the Custom Header feature.
- */
-//require get_template_directory() . '/inc/custom-header.php';
-
-/**
  * Custom template tags for this theme.
  */
 require get_template_directory() . '/inc/template-tags.php';
@@ -124,3 +106,7 @@ require get_template_directory() . '/inc/customizer.php';
  */
 require get_template_directory() . '/inc/jetpack.php';
 
+/**
+ * Load theme's core functionality
+ */
+require get_template_directory() . '/inc/wp-cloud-storage.php';
