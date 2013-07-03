@@ -30,11 +30,6 @@ function wp_cloud_storage_setup() {
 	load_theme_textdomain( 'wp_cloud_storage', get_template_directory() . '/languages' );
 
 	/**
-	 * Add default posts and comments RSS feed links to head
-	 */
-	add_theme_support( 'automatic-feed-links' );
-
-	/**
 	 * Enable support for Post Thumbnails on posts and pages
 	 *
 	 * @link http://codex.wordpress.org/Function_Reference/add_theme_support#Post_Thumbnails

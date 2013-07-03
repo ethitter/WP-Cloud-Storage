@@ -79,20 +79,23 @@ class WP_Cloud_Storage_Base {
 
 		add_filter( 'upload_mimes', array( $this, 'filter_upload_mimes' ) );
 
-		// Commenting
+		// Disable commenting
 		add_filter( 'pre_option_default_comment_status', array( $this, 'comment_ping_status' ) );
 		add_filter( 'pre_option_default_ping_status', array( $this, 'comment_ping_status' ) );
 		add_filter( 'pre_option_comment_moderation', array( $this, 'comment_moderation' ) );
 		add_filter( 'pre_option_comment_whitelist', '__return_null' );
 		add_filter( 'wp_insert_post_data', array( $this, 'comment_status_override' ), 10 );
 		add_action( 'wp_loaded', array( $this, 'disable_comments' ) );
+
+		// Misc
+		add_action( 'init', array( $this, 'disable_wp_core_features' ) );
 	}
 
 	/**
 	 *
 	 */
 	public function action_pre_get_posts( $query ) {
-		if ( $query->is_main_query() ) {
+		if ( ! is_admin() && $query->is_main_query() ) {
 			$query->set( 'post_type', 'attachment' );
 			$query->set( 'post_status', 'inherit' );
 		}
@@ -161,6 +164,21 @@ class WP_Cloud_Storage_Base {
 			if ( post_type_supports( $post_type, 'comments' ) )
 				remove_post_type_support( $post_type, 'comments' );
 		}
+	}
+
+	/**
+	 * Disable various unnecessary or irrelevant Core features
+	 *
+	 * @uses remove_action
+	 * @action init
+	 * @return null
+	 */
+	public function disable_wp_core_features() {
+		remove_action( 'wp_head', 'feed_links', 2 );
+		remove_action( 'wp_head', 'feed_links_extra', 3 );
+		remove_action( 'wp_head', 'rsd_link' );
+		remove_action( 'wp_head', 'wlwmanifest_link' );
+		remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0 );
 	}
 }
 WP_Cloud_Storage_Base::get_instance();
