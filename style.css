@@ -324,6 +324,7 @@ only screen and (min-resolution: 144dpi) {
 
 #page {
 	margin: 0 auto;
+	position: relative;
 }
 
 #masthead, #colophon {
@@ -331,7 +332,13 @@ only screen and (min-resolution: 144dpi) {
 	background-color: #000;
 	width: 100%;
 }
+#masthead {
+	margin-bottom: 15px;
+}
 #colophon {
+	position: absolute;
+	bottom: 0;
+	left: 0;
 	padding: 8px 15px;
 	font-size: 10px;
 	color: #aaa;
