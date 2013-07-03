@@ -100,6 +100,7 @@ class WP_Cloud_Storage_Base {
 		// Misc
 		add_action( 'init', array( $this, 'disable_wp_core_features' ) );
 		add_action( 'admin_menu', array( $this, 'action_admin_menu' ) );
+		add_action( 'admin_bar_menu', array( $this, 'admin_bar' ), 99 );
 	}
 
 	/**
@@ -144,8 +145,12 @@ class WP_Cloud_Storage_Base {
 
 	/**
 	 * Add a new query var specific to this plugin
+	 *
+	 * @param array $vars
+	 * @filter query_vars
+	 * @return array
 	 */
-	public function filter_query_vars( $vars) {
+	public function filter_query_vars( $vars ) {
 		$vars[] = $this->qv;
 
 		return $vars;
@@ -269,7 +274,13 @@ class WP_Cloud_Storage_Base {
 	}
 
 	/**
+	 * Remove items from menu and Dashboard
 	 *
+	 * @global $menu
+	 * @global $submenu
+	 * @uses remove_meta_box
+	 * @action admin_menu
+	 * @return null
 	 */
 	public function action_admin_menu() {
 		// Remove Posts menu item
@@ -279,6 +290,22 @@ class WP_Cloud_Storage_Base {
 
 		// Hide Right Now metabox since it's generally useless for us
 		remove_meta_box( 'dashboard_right_now', 'dashboard', 'core' );
+		remove_meta_box( 'dashboard_recent_comments', 'dashboard', 'core' );
+		remove_meta_box( 'dashboard_recent_drafts', 'dashboard', 'core' );
+		remove_meta_box( 'dashboard_quick_press', 'dashboard', 'core' );
+	}
+
+	/**
+	 * Don't link to New Post UI from admin bar
+	 *
+	 * @global $wp_admin_bar
+	 * @action admin_bar_menu
+	 * @return null
+	 */
+	public function admin_bar() {
+		global $wp_admin_bar;
+
+		$wp_admin_bar->remove_menu( 'new-post' );
 	}
 }
 WP_Cloud_Storage_Base::get_instance();
