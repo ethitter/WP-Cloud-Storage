@@ -83,7 +83,9 @@ class WP_Cloud_Storage_Base {
 
 		add_filter( 'query_vars', array( $this, 'filter_query_vars' ) );
 		add_action( 'generate_rewrite_rules', array( $this, 'action_generate_rewrite_rules' ), 99 );
+
 		add_action( 'attachment_link', array( $this, 'filter_attachment_link' ), 10, 2 );
+		add_filter( 'wp_get_attachment_link', array( $this, 'filter_wp_get_attachment_link' ), 10, 4 );
 
 		add_action( 'template_redirect', array( $this, 'action_template_redirect' ) );
 
@@ -166,6 +168,20 @@ class WP_Cloud_Storage_Base {
 	/**
 	 *
 	 */
+	public function filter_wp_get_attachment_link( $link, $id, $size, $permalink ) {
+		if ( is_singular() && ! $permalink ) {
+			$link = preg_replace( "#(?<=href=(\"|'))[^\"']+(?=(\"|'))#", $this->download_link( $id ), $link );
+
+			$title = sprintf( __( 'Click to download &quot;%s&quot;', 'wp_cloud_storage' ), esc_attr( apply_filters( 'the_title', get_the_title( $id ) ) ) );
+			$link = preg_replace( "#(?<=title=(\"|'))[^\"']+(?=(\"|'))#", $title, $link );
+		}
+
+		return $link;
+	}
+
+	/**
+	 * @todo better checking of passed post ID
+	 */
 	public function action_template_redirect() {
 		if ( get_query_var( $this->qv ) == $this->download_base ) {
 			$id = (int) get_query_var( 'p' );
@@ -202,6 +218,13 @@ class WP_Cloud_Storage_Base {
 		$types['patch|diff'] = 'text/html';
 
 		return $types;
+	}
+
+	/**
+	 *
+	 */
+	public function download_link( $id ) {
+		return user_trailingslashit( home_url( $this->download_base . '/' . $id ) );
 	}
 
 	/**
@@ -309,3 +332,14 @@ class WP_Cloud_Storage_Base {
 	}
 }
 WP_Cloud_Storage_Base::get_instance();
+
+/**
+ *
+ */
+function wp_cloud_storage_get_download_link( $id = false ) {
+	$id = (int) $id;
+	if ( ! $id )
+		$id = get_the_ID();
+
+	return WP_Cloud_Storage_Base::get_instance()->download_link( $id );
+}
