@@ -166,7 +166,20 @@ class WP_Cloud_Storage_Base {
 	}
 
 	/**
+	 * Modify attachment link on single pages
 	 *
+	 * @param string $link
+	 * @param int $id
+	 * @param mixed $size
+	 * @param bool $permalink
+	 * @uses is_singular
+	 * @uses this::download_link
+	 * @uses __
+	 * @uses esc_attr
+	 * @uses apply_filters
+	 * @uses get_the_title
+	 * @filter wp_get_attachment_link
+	 * @return string
 	 */
 	public function filter_wp_get_attachment_link( $link, $id, $size, $permalink ) {
 		if ( is_singular() && ! $permalink ) {
@@ -221,7 +234,12 @@ class WP_Cloud_Storage_Base {
 	}
 
 	/**
+	 * Retrieve download link for given attachment ID
 	 *
+	 * @param int $id
+	 * @uses user_trailingslashit
+	 * @uses home_url
+	 * @return string
 	 */
 	public function download_link( $id ) {
 		return user_trailingslashit( home_url( $this->download_base . '/' . $id ) );
@@ -334,7 +352,12 @@ class WP_Cloud_Storage_Base {
 WP_Cloud_Storage_Base::get_instance();
 
 /**
+ * Retrieve download link for given attachment ID
  *
+ * @param int $id
+ * @uses get_the_ID
+ * @uses WP_Cloud_Storage_Base::download_link
+ * @return string
  */
 function wp_cloud_storage_get_download_link( $id = false ) {
 	$id = (int) $id;
