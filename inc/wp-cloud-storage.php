@@ -113,23 +113,23 @@ class WP_Cloud_Storage_Base {
 			if ( ! $id )
 				wp_die( 'The requested item could not be located.' );
 
-			$attached_item = wp_get_attachment_url( $id );
+			$attached_item = get_attached_file( $id );
 
 			if ( ! $attached_item )
 				wp_die( 'The requested item could not be located.' );
 
-			$mime_type = get_post_mime_type( $id );
-
-			$filename = pathinfo( $attached_item, PATHINFO_BASENAME );
-
 			header( 'Content-Description: File Transfer' );
-			header( 'Content-Type: ' . $mime_type );
-			header( 'Content-Transfer-Encoding: binary' );
-			// header( 'Content-Length: ' . filesize( $attached_item ) );
-			header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
-			header( 'Location: ' . $attached_item );
-			// readfile( $attached_item );
-			exit;
+		    header( 'Content-Type: application/octet-stream' );
+		    header( 'Content-Disposition: attachment; filename=' . pathinfo( $attached_item, PATHINFO_BASENAME ) );
+		    header( 'Content-Transfer-Encoding: binary' );
+		    header( 'Expires: 0' );
+		    header( 'Cache-Control: must-revalidate' );
+		    header( 'Pragma: public' );
+		    header( 'Content-Length: ' . filesize( $attached_item ) );
+		    ob_clean();
+		    flush();
+		    readfile( $attached_item );
+		    exit;
 		}
 	}
 
