@@ -561,6 +561,15 @@ a:hover {
 	margin: 0 0 1.5em;
 }
 
+p.single-download {
+	margin-bottom: 0;
+}
+	p.single-download a {
+		display: inline-block;
+		background: url( 'assets/cloud-download.png' ) no-repeat scroll 0 0;
+		padding: 5px 0 0 38px;
+	}
+
 
 /* =Asides
 ----------------------------------------------- */
