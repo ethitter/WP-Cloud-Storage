@@ -566,9 +566,14 @@ p.single-download {
 }
 	p.single-download a {
 		display: inline-block;
-		background: url( 'assets/cloud-download.png' ) no-repeat scroll 0 0;
-		padding: 5px 0 0 38px;
+		width: 32px;
+		height: 32px;
+		background: url( 'assets/download-sprite.png' ) no-repeat scroll 0 -32px;
+		text-indent: -9999px;
 	}
+		p.single-download a:hover {
+			background-position: 0 0;
+		}
 
 
 /* =Asides
