@@ -79,13 +79,13 @@ class WP_Cloud_Storage_Base {
 	 * @return null
 	 */
 	private function setup() {
-		add_action( 'parse_request', array( $this, 'action_parse_request' ) );
-
 		add_action( 'pre_get_posts', array( $this, 'action_pre_get_posts' ) );
 
 		add_filter( 'query_vars', array( $this, 'filter_query_vars' ) );
 		add_action( 'generate_rewrite_rules', array( $this, 'action_generate_rewrite_rules' ), 99 );
 		add_action( 'attachment_link', array( $this, 'filter_attachment_link' ), 10, 2 );
+
+		add_action( 'template_redirect', array( $this, 'action_template_redirect' ) );
 
 		add_filter( 'upload_mimes', array( $this, 'filter_upload_mimes' ) );
 
@@ -101,36 +101,6 @@ class WP_Cloud_Storage_Base {
 		add_action( 'init', array( $this, 'disable_wp_core_features' ) );
 		add_action( 'admin_menu', array( $this, 'action_admin_menu' ) );
 		add_action( 'admin_bar_menu', array( $this, 'admin_bar' ), 99 );
-	}
-
-	/**
-	 *
-	 */
-	public function action_parse_request( $request ) {
-		if ( array_key_exists( $this->qv, $request->query_vars ) && $this->download_base == $request->query_vars[ $this->qv ] ) {
-			$id = array_key_exists( 'p', $request->query_vars ) ? (int) $request->query_vars['p'] : false;
-
-			if ( ! $id )
-				wp_die( 'The requested item could not be located.' );
-
-			$attached_item = get_attached_file( $id );
-
-			if ( ! $attached_item )
-				wp_die( 'The requested item could not be located.' );
-
-			header( 'Content-Description: File Transfer' );
-		    header( 'Content-Type: application/octet-stream' );
-		    header( 'Content-Disposition: attachment; filename=' . pathinfo( $attached_item, PATHINFO_BASENAME ) );
-		    header( 'Content-Transfer-Encoding: binary' );
-		    header( 'Expires: 0' );
-		    header( 'Cache-Control: must-revalidate' );
-		    header( 'Pragma: public' );
-		    header( 'Content-Length: ' . filesize( $attached_item ) );
-		    ob_clean();
-		    flush();
-		    readfile( $attached_item );
-		    exit;
-		}
 	}
 
 	/**
@@ -191,6 +161,36 @@ class WP_Cloud_Storage_Base {
 		$link = user_trailingslashit( $link );
 
 		return $link;
+	}
+
+	/**
+	 *
+	 */
+	public function action_template_redirect() {
+		if ( get_query_var( $this->qv ) == $this->download_base ) {
+			$id = (int) get_query_var( 'p' );
+
+			if ( ! $id )
+				wp_die( 'The requested item could not be located.' );
+
+			$attached_item = get_attached_file( $id );
+
+			if ( ! $attached_item )
+				wp_die( 'The requested item could not be located.' );
+
+			header( 'Content-Description: File Transfer' );
+		    header( 'Content-Type: application/octet-stream' );
+		    header( 'Content-Disposition: attachment; filename=' . pathinfo( $attached_item, PATHINFO_BASENAME ) );
+		    header( 'Content-Transfer-Encoding: binary' );
+		    header( 'Expires: 0' );
+		    header( 'Cache-Control: must-revalidate' );
+		    header( 'Pragma: public' );
+		    header( 'Content-Length: ' . filesize( $attached_item ) );
+		    ob_clean();
+		    flush();
+		    readfile( $attached_item );
+		    exit;
+		}
 	}
 
 	/**
