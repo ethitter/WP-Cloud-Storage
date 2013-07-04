@@ -313,7 +313,7 @@ body {
 }
 
 #page {
-	background: url('assets/tweed.png') repeat scroll;
+	background: url('assets/binding_dark.png') repeat scroll;
 	margin: 0 auto;
 }
 
@@ -323,7 +323,7 @@ only screen and (-webkit-min-device-pixel-ratio: 2),
 only screen and (min-device-pixel-ratio: 2),
 only screen and (min-resolution: 144dpi) {
     #page {
-         background-image:url('assets/tweed_@2X.png');
+         background-image:url('assets/binding_dark_@2X.png');
      }
 }
 
@@ -363,7 +363,6 @@ only screen and (min-resolution: 144dpi) {
 #main {
 	max-width: 650px;
 	margin: 0 auto;
-	/*background: url('assets/witewall_3.png') repeat scroll;*/
 }
 
 /* Links */
