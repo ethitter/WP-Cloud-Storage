@@ -14,8 +14,7 @@
 		<div class="site-info">
 			<?php do_action( 'wp_cloud_storage_credits' ); ?>
 			<a href="http://wordpress.org/" title="<?php esc_attr_e( 'A Semantic Personal Publishing Platform', 'wp_cloud_storage' ); ?>" rel="generator"><?php printf( __( 'Proudly powered by %s', 'wp_cloud_storage' ), 'WordPress' ); ?></a>
-			<span class="sep"> | </span>
-			<?php printf( __( 'Theme: %1$s by %2$s.', 'wp_cloud_storage' ), 'WP Cloud Storage', '<a href="http://ethitter.com/" rel="designer">Erick Hitter</a>' ); ?>
+			<?php printf( __( '%1$s %2$s %3$s by %4$s.', 'wp_cloud_storage' ), __( 'using the', 'wp_cloud_storage' ), 'WP Cloud Storage', 'system', '<a href="http://ethitter.com/" rel="designer">Erick Hitter</a>' ); ?>
 		</div><!-- .site-info -->
 	</footer><!-- #colophon -->
 </div><!-- #page -->
