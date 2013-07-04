@@ -337,7 +337,9 @@ class WP_Cloud_Storage_Base {
 	}
 
 	/**
-	 * Don't link to New Post UI from admin bar
+	 * Remove "new content" menu item
+	 *
+	 * Most items in the list aren't relevant, so let's lose the clutter.
 	 *
 	 * @global $wp_admin_bar
 	 * @action admin_bar_menu
@@ -346,7 +348,7 @@ class WP_Cloud_Storage_Base {
 	public function admin_bar() {
 		global $wp_admin_bar;
 
-		$wp_admin_bar->remove_menu( 'new-post' );
+		$wp_admin_bar->remove_menu( 'new-content' );
 	}
 }
 WP_Cloud_Storage_Base::get_instance();
