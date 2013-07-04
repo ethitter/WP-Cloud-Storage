@@ -35,6 +35,10 @@
 			if ( $removed )
 				add_filter( 'the_content', 'prepend_attachment' );
 		?>
+
+		<p class="single-download">
+			<a href="<?php echo wp_cloud_storage_get_download_link( get_the_ID() ); ?>"><?php _e( 'Download', 'wp_cloud_storage' ); ?></a>
+		</p>
 	</div><!-- .entry-content -->
 	<?php endif; ?>
 
