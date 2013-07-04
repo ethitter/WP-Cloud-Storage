@@ -308,8 +308,8 @@ textarea {
 }
 
 /* Layout */
-body {
-	background-color: #000;
+body, #masthead, #colophon {
+	background: #000 url('assets/slash_it.png') repeat scroll;
 }
 
 #page {
@@ -322,6 +322,10 @@ only screen and (-o-min-device-pixel-ratio: 2),
 only screen and (-webkit-min-device-pixel-ratio: 2),
 only screen and (min-device-pixel-ratio: 2),
 only screen and (min-resolution: 144dpi) {
+	body, #masthead, #colophon {
+		background-image: url('assets/slash_it_@2X.png');
+	}
+
     #page {
          background-image:url('assets/binding_dark_@2X.png');
      }
@@ -329,7 +333,6 @@ only screen and (min-resolution: 144dpi) {
 
 #masthead, #colophon {
 	padding: 15px;
-	background-color: #000;
 }
 #masthead {
 	margin-bottom: 15px;
