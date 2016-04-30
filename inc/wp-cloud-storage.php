@@ -213,17 +213,17 @@ class WP_Cloud_Storage_Base {
 				wp_die( 'The requested item could not be located.' );
 
 			header( 'Content-Description: File Transfer' );
-		    header( 'Content-Type: application/octet-stream' );
-		    header( 'Content-Disposition: attachment; filename=' . pathinfo( $attached_item, PATHINFO_BASENAME ) );
-		    header( 'Content-Transfer-Encoding: binary' );
-		    header( 'Expires: 0' );
-		    header( 'Cache-Control: must-revalidate' );
-		    header( 'Pragma: public' );
-		    header( 'Content-Length: ' . filesize( $attached_item ) );
-		    ob_clean();
-		    flush();
-		    readfile( $attached_item );
-		    exit;
+			header( 'Content-Type: application/octet-stream' );
+			header( 'Content-Disposition: attachment; filename=' . pathinfo( $attached_item, PATHINFO_BASENAME ) );
+			header( 'Content-Transfer-Encoding: binary' );
+			header( 'Expires: 0' );
+			header( 'Cache-Control: must-revalidate' );
+			header( 'Pragma: public' );
+			header( 'Content-Length: ' . filesize( $attached_item ) );
+			ob_clean();
+			flush();
+			readfile( $attached_item );
+			exit;
 		}
 	}
 
