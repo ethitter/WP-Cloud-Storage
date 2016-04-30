@@ -193,11 +193,16 @@ class WP_Cloud_Storage_Base {
 	}
 
 	/**
-	 * @todo better checking of passed post ID
+	 *
 	 */
 	public function action_template_redirect() {
 		if ( get_query_var( $this->qv ) == $this->download_base ) {
 			$id = (int) get_query_var( 'p' );
+
+			if ( ! get_post( $id ) ) {
+				status_header( 400 );
+				exit;
+			}
 
 			if ( ! $id )
 				wp_die( 'The requested item could not be located.' );
