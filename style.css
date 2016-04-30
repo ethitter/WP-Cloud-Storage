@@ -307,17 +307,80 @@ textarea {
 	width: 98%;
 }
 
+/* Layout */
+body, #masthead, #colophon {
+	background: #000 url('assets/slash_it.png') repeat scroll;
+}
+
+#page {
+	background: url('assets/binding_dark.png') repeat scroll;
+	margin: 0 auto;
+}
+
+@media only screen and (-moz-min-device-pixel-ratio: 2),
+only screen and (-o-min-device-pixel-ratio: 2),
+only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (min-device-pixel-ratio: 2),
+only screen and (min-resolution: 144dpi) {
+	body, #masthead, #colophon {
+		background-image: url('assets/slash_it_@2X.png');
+	}
+
+    #page {
+         background-image:url('assets/binding_dark_@2X.png');
+     }
+}
+
+#masthead, #colophon {
+	padding: 15px;
+}
+#masthead {
+	margin-bottom: 15px;
+}
+#colophon {
+	padding: 8px 15px;
+	font-size: 10px;
+	color: #aaa;
+	text-align: center;
+}
+	#masthead .site-branding {}
+		#masthead .site-branding .site-title, #masthead .site-branding .site-title a {
+			color: #fff;
+			font-weight: bold;
+			font-size: 24px;
+			display: inline-block;
+		}
+			#masthead .site-branding .site-title a {
+				text-decoration: none;
+			}
+			#masthead .site-branding .site-title a:hover {
+				color: #ccc;
+			}
+
+		#masthead .site-branding .site-description {
+			color: #ddd;
+			margin-left: 15px;
+			display: inline-block;
+		}
+
+#main {
+	max-width: 650px;
+	margin: 0 auto;
+}
+
 /* Links */
 a {
-	color: royalblue;
+	color: #ccc;
+	text-decoration: none;
 }
-a:visited {
-	color: purple;
-}
+a:visited,
 a:hover,
 a:focus,
 a:active {
-	color: midnightblue;
+	color: #ccc;
+}
+a:hover {
+	color: #aaa;
 }
 
 /* Alignment */
@@ -460,7 +523,14 @@ a:active {
 }
 .hentry {
 	margin: 0 0 1.5em;
+	color: #ccc;
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 1em;
 }
+	.single .hentry {
+		border-bottom: none;
+		padding-bottom: 0;
+	}
 .byline,
 .updated {
 	display: none;
@@ -469,14 +539,41 @@ a:active {
 .group-blog .byline {
 	display: inline;
 }
+.entry-header, .entry-title, .entry-footer {
+	text-align: center;
+}
+.entry-title {
+	font-size: 20px;
+}
 .entry-content,
 .entry-summary {
-	margin: 1.5em 0 0;
+	margin: 0 auto;
+	text-align: center;
+}
+.entry-content {
+	padding: 10px 0;
+}
+.entry-footer {
+	font-size: 12px;
 }
 .page-links {
 	clear: both;
 	margin: 0 0 1.5em;
 }
+
+p.single-download {
+	margin-bottom: 0;
+}
+	p.single-download a {
+		display: inline-block;
+		width: 32px;
+		height: 32px;
+		background: url( 'assets/download-sprite.png' ) no-repeat scroll 0 -32px;
+		text-indent: -9999px;
+	}
+		p.single-download a:hover {
+			background-position: 0 0;
+		}
 
 
 /* =Asides
@@ -491,8 +588,7 @@ a:active {
 /* =Media
 ----------------------------------------------- */
 
-.entry-content img.wp-smiley,
-.comment-content img.wp-smiley {
+.entry-content img.wp-smiley {
 	border: none;
 	margin-bottom: 0;
 	margin-top: 0;
@@ -555,15 +651,6 @@ object {
 	float: right;
 	text-align: right;
 	width: 50%;
-}
-
-/* =Comments
------------------------------------------------ */
-
-.comment-content a {
-	word-wrap: break-word;
-}
-.bypostauthor {
 }
 
 /* =Widgets
